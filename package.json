@@ -1,0 +1,19 @@
+{
+  "name": "movie_rental_system",
+  "version": "1.0.0",
+  "description": "A base for people to rent movies if their desire.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "date-fns": "^3.0.6",
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.3"
+  }
+}

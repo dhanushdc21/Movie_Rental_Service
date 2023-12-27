@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        #cartContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .cartItem {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 15px;
+            width: 300px;
+            background-color: #fff;
+        }
+
+        .cartItem h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .cartItem p {
+            color: #666;
+            margin: 0;
+        }
+
+        #placeOrderBtn {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #totalCost {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #successMessage {
+            display: none;
+            color: #4caf50;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Cart</h2>
+    <div id="cartContainer"></div>
+    <p id="totalCost"></p>
+    <button id="placeOrderBtn">Place Order</button>
+    <div id="successMessage" style="display: none; color: green; font-weight: bold;"></div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+    url: 'http://localhost:9000/rental_system/getLoggedInUser',
+    type: 'GET',
+    success: function (userData) {
+        loggedInUser = userData.loggedInUser;
+        // Now loggedInUser is defined and can be used in your scripts
+    },
+    error: function (xhr, status, error) {
+        console.error('Error fetching logged-in user:', error);
+    }
+});
+        fetchCart();
+        cart = []; // Clear the cart before fetching new items
+
+        // Event listener for the "Place Order" button
+        $('#placeOrderBtn').on('click', function () {
+            placeOrder();
+        });
+    });
+
+    function fetchCart() {
+        cart = []; // Clear the cart before fetching new items
+    $.ajax({
+        url: 'http://localhost:9000/rental_system/cart',
+        type: 'GET',
+        success: function (cartItems) {
+            console.log('Cart Items:', cartItems);
+            $('#cartContainer').empty();
+
+            if (!Array.isArray(cartItems)) {
+                console.error('Cart items is not an array:', cartItems);
+                return;
+            }
+
+            if (cartItems.length === 0) {
+                $('#cartContainer').append('<p>Your cart is empty.</p>');
+            } else {
+                cartItems.forEach(function (cartItem) {
+                    console.log('Movie details:', cartItem); // Log movie details
+
+                    // Check if rentaCost is defined
+                    const rentalCost = cartItem.rentaCost !== undefined && cartItem.rentaCost !== null
+                        ? '₹' + cartItem.rentaCost.toFixed(2)
+                        : 'N/A';
+
+                    const cartItemHtml = `
+                        <div class="cartItem">
+                            <h3>${cartItem.Title}</h3>
+                            <p>Year: ${cartItem.Year}</p>
+                            <p>Rental Cost: ${rentalCost}</p>
+                        </div>
+                    `;
+                    $('#cartContainer').append(cartItemHtml);
+                });
+
+                const totalCost = cartItems.reduce((total, movie) => {
+                    if (movie.rentaCost) {
+                        console.log(`Movie: ${movie.Title}, Rental Cost: ${movie.rentaCost}`);
+                        return total + parseFloat(movie.rentaCost);
+                    }
+                    return total;
+                }, 0);
+
+                console.log('Total Cost:', totalCost.toFixed(2));
+                $('#totalCost').text('Total Cost: ₹' + totalCost.toFixed(2));
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching cart:', error);
+            $('#cartContainer').html('<p>Error fetching cart data.</p>');
+        }
+    });
+}
+
+
+
+
+
+    function placeOrder() {
+        //var loggedInUser = getLoggedInUser(); // Assuming you have a function to get the logged-in user
+        var currentDate = new Date().toISOString().split('T')[0];
+
+        // Construct the orderData object
+        var orderData = {
+            customer_name: loggedInUser,
+            rent_date: currentDate,
+            return_date: currentDate,
+            moviesInCart: [], // Add movies from the cart dynamically
+        };
+
+        // Update orderData.moviesInCart with the movies from the cart
+        $.ajax({
+            url: 'http://localhost:9000/rental_system/cart',
+            type: 'GET',
+            success: function (cartItems) {
+                orderData.moviesInCart = cartItems.map(movie => movie.Title);
+
+                // Make the actual order request
+                makeOrderRequest(orderData);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching cart:', error);
+                alert('Error placing order. Please try again.');
+            }
+        });
+    }
+
+    function makeOrderRequest(orderData) {
+        
+        $.ajax({
+            url: 'http://localhost:9000/rental_system/order',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(orderData),
+            success: function (response) {
+                console.log('Order placed successfully:', response);
+                showSuccessMessage(response.message);
+                cart = [];
+                // Optionally, you can clear the cart or perform other actions
+                fetchCart(); // Refresh the cart display or update UI as needed
+            },
+            error: function (xhr, status, error) {
+                console.error('Error placing order:', error);
+                alert('Error placing order. Please try again.');
+            }
+        });
+    }
+    function showSuccessMessage(message) {
+        const successMessageElement = $('#successMessage');
+    successMessageElement.text(message);
+    successMessageElement.show();
+}
+</script>
+</body>
+</html>

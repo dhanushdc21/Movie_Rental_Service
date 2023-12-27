@@ -1,0 +1,134 @@
+<!-- movies_page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        #movieContainer {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .movieCard {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            width: 300px;
+        }
+
+        .addToCartBtn {
+            background-color: #4caf50;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .addToCartBtn:hover {
+            background-color: #45a049;
+        }
+
+        #cartBtn {
+            background-color: #18bdb4;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #cartBtn:hover {
+            background-color: #07677c;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <button id="cartBtn" onclick="redirectToCart()">View Cart</button>
+    <h2>Movies List</h2>
+    <div id="movieContainer"></div>
+
+    <script>
+        function redirectToCart() {
+        window.location.href = 'http://localhost:9000/rental_system/login/movies/cart';
+    }
+
+
+        function fetchMovies() {
+            console.log('Before making the request');
+            $.get('http://localhost:9000/rental_system/api/movies', function (movies) {
+                console.log('Movies:', movies);  // Log the movies data
+
+                $('#movieContainer').empty();
+
+                movies.forEach(function (movie) {
+                    const movieCard = `
+                        <div class="movieCard">
+                            <h3>${movie.Title}</h3>
+                            <p>Year: ${movie.Year}</p>
+                            <p>Genre: ${movie.Genre}</p>
+                            <p>Cost: ${'₹12.00/copy'}</p>
+                            <button class="addToCartBtn" data-movie-name="${movie.Title}">ADD TO CART</button>
+                        </div>
+                    `;
+
+                    $('#movieContainer').append(movieCard);
+                });
+
+                // Use event delegation for click event
+                $('#movieContainer').on('click', '.addToCartBtn', function () {
+                    const movieName = $(this).attr('data-movie-name');
+                    console.log("Clicked on movie:", movieName);
+                    addToCart(movieName);
+                });
+            });
+        }
+
+        function addToCart(movieName) {
+            console.log('Adding to cart:', movieName);
+
+            $.ajax({
+                url: 'http://localhost:9000/rental_system/add-to-cart',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ movieName: movieName }),
+                success: function (response) {
+                    console.log(response);
+                    // Display a popup with the response message
+                    alert(`Added "${movieName}" to the cart`);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert(`Failed to add "${movieName}" to the cart`);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            fetchMovies();
+        });
+    </script>
+</body>
+</html>
