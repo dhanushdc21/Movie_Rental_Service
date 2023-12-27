@@ -68,5 +68,3 @@ The Movie Rental System is a web application that allows users to browse movies,
 
 This project is licensed under the [MIT License](LICENSE).
 
-
-Feel free to enhance this README with additional details, instructions, or acknowledgments relevant to your project. Make sure to include a license file (e.g., `LICENSE`) if you haven't already.
