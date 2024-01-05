@@ -41,8 +41,11 @@ The Movie Rental System is a web application that allows users to browse, rent, 
 
 Include screenshots or GIFs that showcase your application.
 
-![Screenshot 1](url_to_screenshot1)
-![Screenshot 2](url_to_screenshot2)
+![Screenshot 1]([url_to_screenshot1](https://raw.githubusercontent.com/dhanushdc21/Movie_Rental_Service/main/images/Screenshot%202024-01-06%20012956.png))
+![Screenshot 2]([url_to_screenshot2](https://raw.githubusercontent.com/dhanushdc21/Movie_Rental_Service/main/images/Screenshot%202024-01-06%20013014.png))
+![Screenshot 3]([https://raw.githubusercontent.com/dhanushdc21/Movie_Rental_Service/main/images/Screenshot%202024-01-06%20013030.png))
+![Screenshot 4]([https://raw.githubusercontent.com/dhanushdc21/Movie_Rental_Service/main/images/Screenshot%202024-01-06%20013043.png))
+
 
 ---
 
