@@ -1,6 +1,6 @@
 # Movie Rental System
 
-![Project Image](url_to_project_image)
+![Project Image]([url_to_project_image](https://raw.githubusercontent.com/dhanushdc21/Movie_Rental_Service/main/images/Screenshot%202024-01-06%20012956.png))
 
 > A web-based movie rental system implemented using Node.js, Express, MongoDB, and jQuery.
 
