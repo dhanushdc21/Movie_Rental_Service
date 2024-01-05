@@ -1,70 +1,86 @@
 # Movie Rental System
 
-## Overview
+![Project Image](url_to_project_image)
 
-The Movie Rental System is a web application that allows users to browse movies, add them to their cart, and place rental orders. The system supports user authentication, allowing users to log in, view available movies, and place orders for selected movies.
+> A web-based movie rental system implemented using Node.js, Express, MongoDB, and jQuery.
+
+---
+
+## Table of Contents
+
+- [Description](#description)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Description
+
+The Movie Rental System is a web application that allows users to browse, rent, and order movies online. It provides features such as user authentication, cart management, and order placement. The backend is implemented using Node.js and Express, and MongoDB is used as the database. The frontend uses HTML, CSS, and jQuery.
+
+---
 
 ## Features
 
-- **User Authentication:** Users can create accounts, log in, and log out.
-- **Browse Movies:** Users can view a list of available movies with details such as title, release year, and rental cost.
-- **Add to Cart:** Users can add movies to their cart for rental.
-- **Place Orders:** Users can place orders for the movies in their cart, specifying the rental date and return date.
-- **Total Cost Calculation:** The system calculates the total cost of the order based on the rental cost of selected movies.
+- User authentication and login
+- Employee and non-employee roles
+- Browse and view movie details
+- Add movies to the cart
+- Place orders with rental dates
+- Employee details display for employees
+- Responsive design for various devices
 
-## Technologies Used
+---
 
-- **Frontend:**
-  - HTML, CSS, JavaScript
-  - jQuery for AJAX requests and DOM manipulation
+## Screenshots
 
-- **Backend:**
-  - Node.js
-  - Express.js for handling routes and requests
-  - MongoDB for storing movie and user data
+Include screenshots or GIFs that showcase your application.
 
-- **Database:**
-  - MongoDB
+![Screenshot 1](url_to_screenshot1)
+![Screenshot 2](url_to_screenshot2)
 
-## Getting Started
+---
 
-1. Clone the repository:
+## Installation
 
-    ```bash
-    git clone https://github.com/dhanushdc21/movie-rental-system.git
-    ```
+1. Clone the repository.
 
-2. Install dependencies:
+```bash
+git clone https://github.com/dhanushdc21/movie-rental-system.git
+cd movie-rental-system
+```
+2. Install dependencies.
+```
+npm install
+```
+3. Set up MongoDB.
+- Make sure MongoDB is installed and running.
+- Update the MongoDB connection string in config.js or .env file.
 
-    ```bash
-    cd movie-rental-system
-    npm install
-    ```
-
-3. Configure the MongoDB connection:
-    - Edit the `config.js` file to set up your MongoDB connection details.
-
-4. Run the application:
-
-    ```bash
-    npm start
-    ```
-
-    The application should be accessible at [http://localhost:9000](http://localhost:9000).
+4. Start the application.
+```
+npm start
+```
 
 ## Usage
 
-1. Access the application in your web browser.
+1. Open your browser and navigate to http://localhost:9000/rental_system/login.
+2. Log in with your credentials.
+3. Explore movies, add them to the cart, and place orders.
 
-2. Create an account or log in with existing credentials.
+## API Endpoints
 
-3. Browse available movies, add them to your cart, and proceed to place an order.
-
-4. View your cart, confirm the order details, and place the order.
-
-5. Check the total cost and receive a success message upon successful order placement.
+1. GET /api/movies: Get a list of all movies.
+2. GET /rental_system/cart: Get the current items in the user's cart.
+3. POST /rental_system/add-to-cart: Add a movie to the user's cart.
+4. POST /rental_system/order: Place an order with selected movies.
+ For more details on API endpoints, refer to the source code in routes/rental_system.js.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-
+This project is licensed under the MIT License.
