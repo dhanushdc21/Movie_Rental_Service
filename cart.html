@@ -12,18 +12,18 @@
             padding: 0;
             background-color: #f9f9f9;
         }
-
+    
         h2 {
             color: #333;
             text-align: center;
         }
-
+    
         #cartContainer {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
         }
-
+    
         .cartItem {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -33,17 +33,17 @@
             width: 300px;
             background-color: #fff;
         }
-
+    
         .cartItem h3 {
             color: #333;
             margin-bottom: 10px;
         }
-
+    
         .cartItem p {
             color: #666;
             margin: 0;
         }
-
+    
         #placeOrderBtn {
             background-color: #4caf50;
             color: #fff;
@@ -57,7 +57,7 @@
             margin-left: auto;
             margin-right: auto;
         }
-
+    
         #totalCost {
             font-size: 18px;
             font-weight: bold;
@@ -65,7 +65,7 @@
             margin-top: 20px;
             text-align: center;
         }
-
+    
         #successMessage {
             display: none;
             color: #4caf50;
@@ -73,19 +73,40 @@
             text-align: center;
             margin-top: 20px;
         }
-
+    
         #employeeDiscountContainer {
-            margin-top: 20px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
         }
-
-        #employeeDiscount {
-            display: none;
-        }
-
+    
         #employeeDiscountLabel {
+            font-weight: bold;
             margin-right: 10px;
         }
+    
+        #employeeDiscount {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+            vertical-align: middle;
+            margin: 0; /* Added to remove default margin */
+            margin-right: 5px; /* Added for spacing */
+        }
+    
+        #employeeDiscount:checked {
+            background-color: #4caf50;
+            border-color: #4caf50;
+        }
     </style>
+    
 </head>
 
 <body>
@@ -95,9 +116,8 @@
 
     <!-- Display Employee Discount container -->
     <div id="employeeDiscountContainer" style="display: none;">
-        <label id="employeeDiscountLabel" for="employeeDiscount">Employee Discount: ₹10.00</label>
+        <label id="employeeDiscountLabel" for="employeeDiscount">Apply Employee Discount.</label>
         <input type="checkbox" id="employeeDiscount" name="employeeDiscount">
-        <label for="employeeDiscount">Apply Employee Discount</label>
     </div>
 
     <button id="placeOrderBtn">Place Order</button>
@@ -105,6 +125,8 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         let loggedInUser;
+        let employeeDiscountApplied = false; // Declare the variable here
+
         $(document).ready(function () {
             console.log('Document ready.');
 
@@ -119,6 +141,10 @@
                     if (isEmployee) {
                                        // If the user is an employee, display the discount container
                 $('#employeeDiscountContainer').show();
+                $('#employeeDiscount').on('change', function () {
+                employeeDiscountApplied = $(this).is(':checked');
+                fetchCart(); // Update the cart display when the discount is applied or removed
+            });
 
 // Print a message for employees
 console.log('Employee');
@@ -149,6 +175,7 @@ $.ajax({
         fetchCart();
     }
 });
+
                     }
                     else {
                         console.log('Not an employee');
@@ -211,7 +238,8 @@ $.ajax({
                     const totalCost = cartItems.reduce((total, movie) => {
                         if (movie.rentaCost) {
                             console.log(`Movie: ${movie.Title}, Rental Cost: ${movie.rentaCost}`);
-                            return total + parseFloat(movie.rentaCost);
+                            const discount = employeeDiscountApplied ? 10 : 0;
+                        return total + parseFloat(movie.rentaCost) - discount;
                         }
                         return total;
                     }, 0);
