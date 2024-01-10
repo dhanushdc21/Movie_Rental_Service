@@ -15,7 +15,7 @@
     router.use(bodyParser.urlencoded({ extended: true }));
 
     var loggedInUser = ''; // Variable to store the logged-in user
-
+    var customer_name = '';
     function addToCart(movieId) {
         // Make an AJAX request to the server to add the movie to the cart
         $.post('http://localhost:9000/rental_system/add-to-cart', { movieId }, function (response) {
@@ -53,6 +53,56 @@
         });
     });
 
+    router.delete('/login/movies/return_movie/:orderId/:movieId', async (req, res) => {
+        try {
+            const { orderId, movieId } = req.params;
+    
+            // Find the order by orderId
+            const order = await Order.findById(orderId);
+    
+            if (!order) {
+                return res.status(404).json({ error: 'Order not found' });
+            }
+    
+            // Remove the movie from the order
+            order.movies = order.movies.filter(movie => movie._id.toString() !== movieId);
+    
+            // Save the updated order
+            await order.save();
+    
+            res.json({ message: 'Movie returned successfully', order });
+        } catch (error) {
+            console.error('Error returning movie:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+    
+   router.get('/login/movies/previous_orders', async (req, res) => {
+        try {
+            // Fetch previous orders for the logged-in customer
+            const previousOrders = await Order.find({ customer_name: loggedInUser }).sort({ rent_date: -1 });
+    
+            // Render an HTML page or send a JSON response with previous orders data
+        res.sendFile(path.join(__dirname, '..', 'previous_orders.html'));
+        } catch (error) {
+            console.error('Error fetching previous orders:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+    
+    router.get('/login/movies/previous_orders_data', async (req, res) => {
+        try {
+            // Fetch previous orders for the logged-in customer
+            const previousOrders = await Order.find({ customer_name: loggedInUser }).sort({ rent_date: -1 });
+    
+            // Render an HTML page or send a JSON response with previous orders data
+        res.json({ orders: previousOrders })
+        } catch (error) {
+            console.error('Error fetching previous orders:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+    
     router.get('/', async(req,res) => {
         try{
             const movie = await Movie.find(); 
@@ -152,6 +202,8 @@
     
             // Check if the user exists and the password matches
             if (user && password === user.password) {
+                customer_name = user.username;
+                console.log(customer_name)
                 // Check if the user is an employee
                 const isEmployee = await EmployeeDetails.exists({ employee_name: username.trim() });
                 const existingCustomer = await Customers.findOne({ customer_name: username.trim() });

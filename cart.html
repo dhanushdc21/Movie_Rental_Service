@@ -4,49 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
+    <title>Dark Theme Cart</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             margin: 20px;
             padding: 0;
-            background-color: #f9f9f9;
+            background-color: #2b2b2b; /* Dark background */
+            color: #eee; /* Light text */
         }
-    
+
         h2 {
-            color: #333;
+            color: #f7fcfc; /* Orange title */
             text-align: center;
         }
-    
+
         #cartContainer {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
         }
-    
+
         .cartItem {
-            border: 1px solid #ddd;
+            border: 1px solid #333;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             margin: 10px;
             padding: 15px;
             width: 300px;
-            background-color: #fff;
+            background-color: #333; /* Darker card background */
+            transition: transform 0.3s ease;
         }
-    
+
+        .cartItem:hover {
+            transform: scale(1.05);
+        }
+
         .cartItem h3 {
-            color: #333;
+            color: #f8fafb; /* Orange heading */
             margin-bottom: 10px;
         }
-    
+
         .cartItem p {
-            color: #666;
+            color: #bbb; /* Lighter text */
             margin: 0;
         }
-    
+
+        #totalCost {
+            font-size: 18px;
+            font-weight: bold;
+            color: #eee; /* Light text */
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #employeeDiscountContainer {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            color: #eee; /* Light text */
+        }
+
+        #employeeDiscountLabel {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        #employeeDiscount {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #eee; /* Light border */
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+            vertical-align: middle;
+            margin: 0; /* Added to remove default margin */
+            margin-right: 5px; /* Added for spacing */
+        }
+
+        #employeeDiscount:checked {
+            background-color: #0c5d61; /* Green background */
+            border-color: #05b4ae; /* Green border */
+        }
+
         #placeOrderBtn {
-            background-color: #4caf50;
-            color: #fff;
+            background-color: #333; /* Blue button */
+            color: #eee; /* Light text */
             padding: 10px 15px;
             border: none;
             border-radius: 4px;
@@ -56,57 +103,22 @@
             display: block;
             margin-left: auto;
             margin-right: auto;
+            transition: background-color 0.5s ease;
         }
-    
-        #totalCost {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-top: 20px;
-            text-align: center;
+
+        #placeOrderBtn:hover {
+            background-color: #009688; /* Darker blue on hover */
         }
-    
+
         #successMessage {
             display: none;
-            color: #4caf50;
+            color: #02b6aa; /* Green text */
             font-weight: bold;
             text-align: center;
             margin-top: 20px;
         }
-    
-        #employeeDiscountContainer {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-        }
-    
-        #employeeDiscountLabel {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-    
-        #employeeDiscount {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #333;
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
-            transition: background-color 0.3s, border-color 0.3s;
-            vertical-align: middle;
-            margin: 0; /* Added to remove default margin */
-            margin-right: 5px; /* Added for spacing */
-        }
-    
-        #employeeDiscount:checked {
-            background-color: #4caf50;
-            border-color: #4caf50;
-        }
     </style>
-    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 
 <body>
@@ -121,7 +133,7 @@
     </div>
 
     <button id="placeOrderBtn">Place Order</button>
-    <div id="successMessage" style="display: none; color: green; font-weight: bold;"></div>
+    <div id="successMessage" style="display: none;"></div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         let loggedInUser;

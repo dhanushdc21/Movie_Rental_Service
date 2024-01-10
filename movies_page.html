@@ -1,54 +1,69 @@
-<!-- movies_page.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movies Page</title>
+    <title>Dark Theme Movies</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 20px;
             padding: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #fff; /* White text */
         }
 
         h2 {
-            color: #333;
+            color: #dcdcdc; /* Light gray title */
+            text-align: center;
         }
 
         #movieContainer {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .movieCard {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px;
+            border: 1px solid #333;
+            padding: 20px;
+            margin: 20px;
             width: 300px;
+            background-color: #333; /* Darker card background */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .movieCard:hover {
+            transform: scale(1.05);
         }
 
         .addToCartBtn {
-            background-color: #4caf50;
-            color: white;
-            padding: 8px 16px;
+            background-color: #555; /* Darker button background */
+            color: #fff; /* White button text */
+            padding: 10px;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
+            display: block;
             font-size: 14px;
             cursor: pointer;
             border: none;
             border-radius: 4px;
+            margin-top: 15px;
+            transition: background 0.5s ease;
         }
 
         .addToCartBtn:hover {
-            background-color: #45a049;
+            background-color: #009688; /* Darker gray on hover */
         }
 
-        #cartBtn {
-            background-color: #18bdb4;
-            color: white;
-            padding: 8px 16px;
+        #cartBtn,
+        #ordersBtn {
+            background-color: #333; /* Darker button background */
+            color: #fff; /* White button text */
+            padding: 10px 16px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -56,25 +71,41 @@
             cursor: pointer;
             border: none;
             border-radius: 4px;
-            margin-bottom: 20px;
+            transition: background 0.5s ease;
         }
 
-        #cartBtn:hover {
-            background-color: #07677c;
+        #cartBtn:hover,
+        #ordersBtn:hover {
+            background-color: #026e63; /* Darker gray on hover */
+        }
+
+        #cartBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        #ordersBtn {
+            margin-right: auto; /* Push to the left */
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
+
 <body>
-    <button id="cartBtn" onclick="redirectToCart()">View Cart</button>
+    <button id="ordersBtn" onclick="redirectToOrder()">View Orders</button>
     <h2>Movies List</h2>
     <div id="movieContainer"></div>
+    <button id="cartBtn" onclick="redirectToCart()">View Cart</button>
 
     <script>
         function redirectToCart() {
-        window.location.href = 'http://localhost:9000/rental_system/login/movies/cart';
-    }
+            window.location.href = 'http://localhost:9000/rental_system/login/movies/cart';
+        }
 
+        function redirectToOrder() {
+            window.location.href = 'http://localhost:9000/rental_system/login/movies/previous_orders';
+        }
 
         function fetchMovies() {
             console.log('Before making the request');
@@ -86,10 +117,10 @@
                 movies.forEach(function (movie) {
                     const movieCard = `
                         <div class="movieCard">
-                            <h3>${movie.Title}</h3>
+                            <h3 style="color: #dcdcdc;">${movie.Title}</h3>
                             <p>Year: ${movie.Year}</p>
                             <p>Genre: ${movie.Genre}</p>
-                            <p>Cost: ${'₹12.00/copy'}</p>
+                            <p>Cost: ₹12.00/copy</p>
                             <button class="addToCartBtn" data-movie-name="${movie.Title}">ADD TO CART</button>
                         </div>
                     `;
@@ -131,4 +162,5 @@
         });
     </script>
 </body>
+
 </html>

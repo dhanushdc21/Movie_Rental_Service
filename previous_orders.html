@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Orders</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #1a1a1a; /* Dark background */
+            color: #fff; /* White text */
+        }
+
+        h1 {
+            text-align: center;
+            color: #dcdcdc; /* Light gray title */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #333;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #333; /* Darker card background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        strong {
+            color: #009688; /* Darker blue strong text */
+        }
+
+        .viewDetailsBtn {
+            background-color: #33aa9e; /* Darker button background */
+            color: #fff; /* White button text */
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            margin-top: 10px;
+            transition: background 0.5s ease;
+        }
+
+        .viewDetailsBtn:hover {
+            background-color: #b1ccca; /* Darker gray on hover */
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+    <h1>Previous Orders</h1>
+
+    <ul id="ordersList">
+        <!-- Orders will be dynamically added here -->
+    </ul>
+
+    <script>
+        // Function to fetch orders data and populate the orders
+        function fetchAndPopulateOrders() {
+            // Make an AJAX request to fetch orders
+            $.get('http://localhost:9000/rental_system/login/movies/previous_orders_data', function (response) {
+                const orders = response.orders;
+
+                // Check if orders is defined and is an array
+                if (Array.isArray(orders)) {
+                    const ordersList = document.getElementById('ordersList');
+
+                    // Iterate through orders and append to the list
+                    orders.forEach(order => {
+                        const listItem = document.createElement('li');
+                        listItem.innerHTML = `
+                            <strong style="color: #009688;">Rent Date:</strong> ${order.rent_date}<br>
+                            <strong style="color: #009688;">Return Date:</strong> ${order.return_date}<br>
+                            <strong style="color: #009688;">Movies:</strong>
+                            <ul>
+                                ${order.movies.map(movie => `
+                                    <li style="color: #fff;">
+                                        ${movie.title} (${movie.year}) <br>
+                                        <button class="viewDetailsBtn" onclick="returnMovie('${order._id}', '${movie._id}')">Return</button>
+                                    </li>`).join('')}
+                            </ul>
+                            
+                        `;
+                        ordersList.appendChild(listItem);
+                    });
+                } else {
+                    console.error('Invalid or missing orders data.');
+                    // Handle the error if needed
+                }
+            }).fail(function () {
+                console.error('Error fetching orders data');
+                // Handle the error if needed
+            });
+        }
+
+        function returnMovie(orderId, movieId) {
+            // Make an AJAX request to your server to handle movie return
+            $.ajax({
+                url: `http://localhost:9000/rental_system/login/movies/return_movie/${orderId}/${movieId}`,
+                type: 'DELETE',
+                success: function (response) {
+                    console.log('Movie returned successfully:', response);
+                    // Reload the orders after successful deletion
+                    fetchAndPopulateOrders();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error returning movie:', error);
+                    // Handle the error if needed
+                }
+            });
+        }
+        // Populate orders when the page loads
+        fetchAndPopulateOrders();
+    </script>
+</body>
+
+</html>
